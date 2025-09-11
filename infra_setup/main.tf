@@ -132,6 +132,13 @@ resource "aws_security_group" "internet_facing_load_balancer_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -357,7 +364,7 @@ resource "aws_iam_instance_profile" "ec2_instance_profile" {
 # Launch Template for ASG
 resource "aws_launch_template" "app_template" {
   name_prefix   = "app-template-"
-  image_id      = "ami-0c4fc5dcabc9df21d" # Amazon Linux 2 in eu-north-1
+  image_id      = "ami-09a68c29a8b7a1586" # Custom AppTierImage with pre-configured app
   instance_type = "t3.micro"
 
   vpc_security_group_ids = [aws_security_group.app_sg.id]
@@ -366,7 +373,13 @@ resource "aws_launch_template" "app_template" {
   }
   key_name = "demo"
 
-  # user_data removed for manual testing
+  user_data = base64encode(<<-EOF
+    #!/bin/bash
+    aws s3 sync s3://3tier-application-code-storage694/app-tier/ /home/ec2-user/app/ --delete
+    cd /home/ec2-user/app && npm install --production
+    pm2 restart all || pm2 start index.js --name "app"
+  EOF
+  )
 }
 
 # Auto Scaling Group
@@ -453,7 +466,7 @@ resource "aws_lb_listener" "app_listener" {
 # Launch Template for Web Tier
 resource "aws_launch_template" "web_template" {
   name_prefix   = "web-template-"
-  image_id      = "ami-0c4fc5dcabc9df21d" # Amazon Linux 2 in eu-north-1
+  image_id      = "ami-09ccd985141606aa9" # Custom WebTierImage with pre-configured app
   instance_type = "t3.micro"
 
   vpc_security_group_ids = [aws_security_group.web_sg.id]
@@ -462,7 +475,12 @@ resource "aws_launch_template" "web_template" {
   }
   key_name = "demo"
 
-  # user_data removed for manual testing
+  user_data = base64encode(<<-EOF
+    #!/bin/bash
+    aws s3 sync s3://3tier-application-code-storage694/web-tier/build/ /var/www/html/ --delete
+    systemctl restart nginx
+  EOF
+  )
 }
 
 # Auto Scaling Group for Web Tier
@@ -499,6 +517,20 @@ resource "aws_lb_listener" "web_listener" {
   load_balancer_arn = aws_lb.internet_facing_lb.arn
   port              = "80"
   protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.web_tg.arn
+  }
+}
+
+# HTTPS Listener for Internet-facing Load Balancer
+resource "aws_lb_listener" "https_listener" {
+  load_balancer_arn = aws_lb.internet_facing_lb.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  certificate_arn   = "arn:aws:acm:eu-north-1:857156722233:certificate/9326c6b7-089a-4936-9483-190fb8f76194"
 
   default_action {
     type             = "forward"
