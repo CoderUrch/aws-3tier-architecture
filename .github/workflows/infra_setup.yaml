@@ -3,10 +3,16 @@ name: 3-Tier Infrastructure Provisioning CI/CD Pipeline
 on:
   push:
     branches:
-      - main   # Run whenever you push to main
+      - main
+    paths:
+      - 'infra_setup/**'
+      - '.github/workflows/infra_setup.yaml'
   pull_request:
     branches:
-      - main   # Run on PRs targeting main
+      - main
+    paths:
+      - 'infra_setup/**'
+      - '.github/workflows/infra_setup.yaml'
 
 jobs:
   terraform:
