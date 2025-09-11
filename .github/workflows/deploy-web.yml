@@ -3,7 +3,9 @@ name: Deploy Web Tier
 on:
   push:
     branches: [main]
-    paths: ['aws-three-tier-web-architecture-workshop/application-code/web-tier/**']
+    paths: 
+      - 'aws-three-tier-web-architecture-workshop/application-code/web-tier/**'
+      - 'aws-three-tier-web-architecture-workshop'
   workflow_dispatch:
 
 env:
