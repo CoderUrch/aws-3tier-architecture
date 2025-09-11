@@ -6,7 +6,7 @@
 .terraform.lock.hcl
 
 # Workshop code (separate repo)
-aws-three-tier-web-architecture-workshop/
+# aws-three-tier-web-architecture-workshop/
 
 # IDE
 .vscode/
