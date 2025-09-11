@@ -1,4 +1,4 @@
-name: 3-Tier Infrastructure CI/CD Pipeline
+name: 3-Tier Infrastructure Provisioning CI/CD Pipeline
 
 on:
   push:
