@@ -1,4 +1,4 @@
-name: Deploy Web Tier
+name: Deploy Webs Tier
 
 on:
   push:
