@@ -25,6 +25,11 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Debug directory structure
+        run: |
+          ls -la
+          find . -name "web-tier" -type d
+          
       - name: Build React app
         run: |
           cd aws-three-tier-web-architecture-workshop/application-code/web-tier
