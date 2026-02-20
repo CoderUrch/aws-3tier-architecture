@@ -4,6 +4,12 @@ variable "region" {
   default     = "eu-north-1"
 }
 
+variable "vpc_name" {
+  description = "The name tag for the VPC"
+  type        = string
+  default     = "main-vpc"
+}
+
 variable "availability_zones" {
   type    = list(string)
   default = ["eu-north-1a", "eu-north-1b"]
@@ -13,7 +19,6 @@ variable "vpc_cidr" {
   description = "The CIDR block for the VPC"
   type        = string
   default     = "10.0.0.0/16"
-
 }
 
 variable "webtier_subnet_cidr" {

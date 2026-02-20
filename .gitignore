@@ -1,3 +1,5 @@
+aws-ssh.pem
+
 # Terraform
 *.tfstate
 *.tfstate.*
