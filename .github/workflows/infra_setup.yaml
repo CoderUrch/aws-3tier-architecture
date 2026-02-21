@@ -30,6 +30,16 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
+      - name: Import Existing Secret
+        run: |
+          # Check if secret exists and import if needed
+          if aws secretsmanager describe-secret --secret-id mysql-db-pass --region eu-north-1 >/dev/null 2>&1; then
+            echo "Secret exists, attempting import..."
+            terraform import module.database.aws_secretsmanager_secret.db_password mysql-db-pass || echo "Import failed or resource already managed"
+          else
+            echo "Secret does not exist, skipping import"
+          fi
+
       - name: Terraform Plan
         run: terraform plan -out=tfplan
 
