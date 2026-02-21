@@ -35,7 +35,10 @@ jobs:
           # Check if secret exists and import if needed
           if aws secretsmanager describe-secret --secret-id mysql-db-pass --region eu-north-1 >/dev/null 2>&1; then
             echo "Secret exists, attempting import..."
-            terraform import module.database.aws_secretsmanager_secret.db_password mysql-db-pass || echo "Import failed or resource already managed"
+            # Get the full ARN of the secret
+            SECRET_ARN=$(aws secretsmanager describe-secret --secret-id mysql-db-pass --region eu-north-1 --query 'ARN' --output text)
+            echo "Secret ARN: $SECRET_ARN"
+            terraform import module.database.aws_secretsmanager_secret.db_password "$SECRET_ARN" || echo "Import failed or resource already managed"
           else
             echo "Secret does not exist, skipping import"
           fi
