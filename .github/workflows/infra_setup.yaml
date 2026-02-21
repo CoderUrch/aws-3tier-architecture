@@ -4,24 +4,11 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'infra_setup/**'
-      - '.github/workflows/infra_setup.yaml'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'infra_setup/**'
-      - '.github/workflows/infra_setup.yaml'
 
 jobs:
   terraform:
     name: Terraform Apply
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: infra_setup   # put your Terraform code inside /infra dir
 
     steps:
       - name: Checkout Code
