@@ -24,7 +24,7 @@ resource "aws_iam_policy" "ec2_vpc_s3_rds_full_access" {
     Statement = [
       {
         Effect   = "Allow"
-        Action   = ["ec2:*", "s3:*", "rds:*"]
+        Action   = ["ec2:*", "s3:*", "rds:*", "ssm:*"]
         Resource = "*"
       }
     ]

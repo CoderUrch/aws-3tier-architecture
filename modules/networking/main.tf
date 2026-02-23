@@ -99,6 +99,7 @@ resource "aws_route_table_association" "public_rt_assoc" {
   subnet_id      = aws_subnet.webtier[count.index].id
   route_table_id = aws_route_table.public_rt.id
 }
+
 resource "aws_route_table" "private_rt" {
   count  = 2
   vpc_id = aws_vpc.main.id
