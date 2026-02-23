@@ -18,11 +18,18 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-north-1   # change to your region
+          role-to-assume: arn:aws:iam::798555099259:role/GitHubActionsRole
+          role-session-name: GitHubActions-Terraform
+          aws-region: eu-north-1
+
+      # Add permissions check (optional)
+      - name: Verify AWS Identity
+        run: |
+          aws sts get-caller-identity
+          echo "Successfully authenticated with AWS using OIDC!"
+      
 
       - name: Terraform Init
         run: terraform init

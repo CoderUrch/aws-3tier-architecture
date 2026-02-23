@@ -17,3 +17,5 @@ aws-three-tier-web-architecture-workshop/
 # OS
 .DS_Store
 Thumbs.db
+
+github-actions-trust-policy.json
