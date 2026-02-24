@@ -83,3 +83,31 @@ resource "aws_autoscaling_group" "web_asg" {
     propagate_at_launch = true
   }
 }
+
+resource "aws_instance" "app_instance" {
+  ami           = "ami-073130f74f5ffb161"
+  instance_type = "t3.micro"
+  subnet_id     = var.apptier[0]
+  key_name      = "aws-ssh"
+
+  vpc_security_group_ids = [var.app_sg]
+  iam_instance_profile   = var.ec2_instance_profile
+
+  tags = {
+    Name = "app-test-vm"
+  }
+}
+
+resource "aws_instance" "web_instance" {
+  ami           = "ami-073130f74f5ffb161"
+  instance_type = "t3.micro"
+  subnet_id     = var.webtier[0]
+  key_name      = "aws-ssh"
+
+  vpc_security_group_ids = [var.web_sg]
+  iam_instance_profile   = var.ec2_instance_profile
+
+  tags = {
+    Name = "web-test-vm"
+  }
+}
