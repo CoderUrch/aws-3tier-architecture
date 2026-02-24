@@ -45,7 +45,7 @@ resource "aws_autoscaling_group" "app_asg" {
 # Launch Template for Web Tier
 resource "aws_launch_template" "web_template" {
   name_prefix   = "web-template-"
-  image_id      = "ami-0a716d3f3b16d290c" # Custom WebTierImage with pre-configured app
+  image_id      = "ami-0cb230df875b17a25" # Custom WebTierImage with pre-configured app
   instance_type = "t3.micro"
 
   vpc_security_group_ids = [var.web_sg]
