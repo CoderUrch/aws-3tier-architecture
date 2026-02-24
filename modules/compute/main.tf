@@ -60,7 +60,7 @@ resource "aws_autoscaling_group" "web_asg" {
   name                = "web-asg"
   vpc_zone_identifier = var.webtier
   target_group_arns   = [var.web_tg]
-  health_check_type   = "EC2"
+  health_check_type   = "ELB"
 
   min_size         = 2
   max_size         = 3
