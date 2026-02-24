@@ -1,7 +1,7 @@
 # Launch Template for ASG
 resource "aws_launch_template" "app_template" {
   name_prefix   = "app-template-"
-  image_id      = "ami-0a716d3f3b16d290c" # Custom AppTierImage with pre-configured app
+  image_id      = "ami-0ec9b860c84acaffc" # Custom AppTierImage with pre-configured app
   instance_type = "t3.micro"
 
   vpc_security_group_ids = [var.app_sg]
@@ -15,8 +15,8 @@ resource "aws_launch_template" "app_template" {
 resource "aws_autoscaling_group" "app_asg" {
   name                = "app-asg"
   vpc_zone_identifier = var.apptier
-  target_group_arns   = [var.app_tg]
-  health_check_type   = "EC2"
+  target_group_arns   = [aws_lb_target_group.app_tg.arn]
+  health_check_type   = "ELB"
 
   min_size         = 2
   max_size         = 3
