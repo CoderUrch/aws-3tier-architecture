@@ -15,7 +15,7 @@ resource "aws_launch_template" "app_template" {
 resource "aws_autoscaling_group" "app_asg" {
   name                = "app-asg"
   vpc_zone_identifier = var.apptier
-  target_group_arns   = [aws_lb_target_group.app_tg.arn]
+  target_group_arns   = [var.app_tg]  # Use the new variable for the ARN
   health_check_type   = "ELB"
 
   min_size         = 2
